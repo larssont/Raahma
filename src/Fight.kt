@@ -14,11 +14,22 @@ class Fight (private val player: Player, private val combat: Combat){
             if (player.equippedArmour == null) mob.damage
             else (mob.damage*(1- player.equippedArmour!!.damageReduceFactor)).toInt()
 
+        println("\n".repeat(8))
+        println("You have initiated a fight with: ${mob.name}")
+
         while(true) {
-
             val attack = chooseAttack(attackOptions)
-            val playerDamage = (attack.damage*damageFactor).toInt()
+            var criticalDamage = 1.0
 
+            player.equippedWeapon?.let {
+                if (Random.nextDouble() < it.critProbablity) {
+                    criticalDamage += 0.5 + 0.5*Random.nextDouble()
+                }
+            }
+
+            val playerDamage = (attack.damage*damageFactor*criticalDamage).toInt()
+
+            println()
             if (Random.nextDouble() < mob.blockAbility) println("${mob.name} blocked your attack!")
 
             else {
@@ -27,7 +38,7 @@ class Fight (private val player: Player, private val combat: Combat){
 
                     println("You killed ${mob.name}. Fight over.")
                     fightSkill?.let {
-                        SkillSystem().increaseExp(it, mob.exp)
+                        player.increaseExp(it, mob.exp)
                         println("You gained ${mob.exp} experience points in ${it.name}")
                     }
 
@@ -63,7 +74,7 @@ class Fight (private val player: Player, private val combat: Combat){
 
         while (true) {
 
-            val attack = attacks.find { it.name.toLowerCase() == input || attacks.indexOf(it).toString() == input }
+            val attack = attacks.find { it.name.toLowerCase() == input || (attacks.indexOf(it)+1).toString() == input }
             attack?.let {return it}
 
             println("That's not an available attack. These are your options:")

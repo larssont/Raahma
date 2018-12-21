@@ -8,15 +8,6 @@ class SkillSystem{
         return Math.pow((1.02), level - 1.toDouble())
     }
 
-    fun increaseExp(skill: Skill, exp: Int) {
-        skill.experience += exp
-        skill.totalExperience += exp
-        if (skill.experience >= skill.experienceGap) {
-            skill.level++
-            skill.experience = 0
-        }
-    }
-
     interface Skill {
         var experience: Int
         val name: String
@@ -31,7 +22,7 @@ class SkillSystem{
         override val name: String,
         override val maxLevel: Int = 100,
         override var experience: Int = 0,
-        override var experienceGap: Int = (1000*exponentialFactor(level)).toInt(),
+        override var experienceGap: Int = (500*exponentialFactor(level)).toInt(),
         override var totalExperience: Int = 0
     ) : Skill
 
@@ -40,7 +31,7 @@ class SkillSystem{
         override val name: String,
         override val maxLevel: Int = 100,
         override var experience: Int = 0,
-        override var experienceGap: Int = (1000*exponentialFactor(level)).toInt(),
+        override var experienceGap: Int = (500*exponentialFactor(level)).toInt(),
         override var totalExperience: Int = 0
     ) : Skill {
         var damageLevelMultiplier: Double = level*logFactor(level)

@@ -50,7 +50,9 @@ class Item (player: Player) {
     val bread = Food("Bread",15,5)
     val potato = Food("Potato",70,40)
     val rockFish = Food("Rock fish",150,100)
-    val foods = arrayListOf(shrimp,corn,beef,chicken,grayGoo,honey,banana,bread,potato,rockFish)
+    val lambMeat = Food("Lamb meat", 50, 35)
+
+    val shopFoods = arrayListOf(shrimp,corn,chicken,grayGoo,honey,banana,bread,potato,rockFish)
 
     val copperCoin = Currency("Copper coin",1)
 
@@ -65,7 +67,8 @@ class Item (player: Player) {
                 val value = a.cost
                 val levelReq = a.levelReq
                 val damageFactor = a.damageFactor*b.damageFactor
-                weapons.add(Weapon(name,value,levelReq,skill,damageFactor))
+                val critProbablity = b.critProbablity
+                weapons.add(Weapon(name,value,levelReq,skill,damageFactor,critProbablity))
             }
         }
         return weapons
@@ -101,7 +104,8 @@ class Item (player: Player) {
         override val value: Int,
         val levelReq: Int,
         val skill: SkillSystem.FightSkill,
-        val damageFactor: Double
+        val damageFactor: Double,
+        val critProbablity: Double
     ) : Storable
 
     data class Food (

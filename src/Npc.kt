@@ -84,6 +84,7 @@ class Npc {
                                 println("You purchased 1 ${storable.name.toLowerCase()}")
                                 println("Do you wanna buy anything else?")
                                 buySequence(player)
+                                return
                             } else if (money != null) {
                                 println("Sorry, you need ${storable.value - money} more copper coins.")
                                 return

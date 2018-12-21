@@ -1,4 +1,4 @@
-class Parser (val player: Player, val visitables: List<Place.Visitable>, val locations: List<Location>, val fight: Fight) {
+class Parser (val player: Player, val places: List<Location.Place>, val districts: List<Location.District>, val fight: Fight) {
 
     var quit: Boolean = false
 
@@ -7,7 +7,9 @@ class Parser (val player: Player, val visitables: List<Place.Visitable>, val loc
 
     val commandsWords = commands.map { it.subClassName().capitalize() to it.altCommand }.toMap()
 
-    val locationsList = locations.map { it.name }
+    val districtsList = districts.map { it.name }
+
+    val inventoryList = mutableListOf(player.inventory.keys)
 
     private fun Any.subClassName(): String {
         return this::class.java.name.toLowerCase().removePrefix("parser$")
@@ -55,10 +57,10 @@ class Parser (val player: Player, val visitables: List<Place.Visitable>, val loc
             val line = "-".repeat(105)
             val columnSize = "%-27s"
 
-            val visitablesCopy = ArrayList(visitables)
+            val visitablesCopy = ArrayList(places)
 
             println(line)
-            locationsList.forEach {
+            districtsList.forEach {
                 System.out.printf(columnSize, it)
             }
             println()
@@ -66,13 +68,13 @@ class Parser (val player: Player, val visitables: List<Place.Visitable>, val loc
 
             var i = 0
             loop@while (true) {
-                for (location in locations) {
-                    val locationMatch = visitablesCopy.find { it.location == location }
+                for (location in districts) {
+                    val locationMatch = visitablesCopy.find { it.district == location }
 
                     System.out.printf(columnSize, locationMatch?.name ?: "")
                     visitablesCopy.remove(locationMatch)
                     i++
-                    if (i % locations.size == 0) println()
+                    if (i % districts.size == 0) println()
                     if (visitablesCopy.size == 0) break@loop
                 }
             }
@@ -84,11 +86,11 @@ class Parser (val player: Player, val visitables: List<Place.Visitable>, val loc
         override val altCommand: List<String> = listOf("t")
         override fun run(input: List<String>) {
             if (input.size < 2) {
-                println("You can currently travel to these locations:")
-                printNumberedList(locationsList)
+                println("You can currently travel to these districts:")
+                printNumberedList(districtsList)
             }
             else {
-                locations.forEachIndexed { index, location ->
+                districts.forEachIndexed { index, location ->
                     if (input[1] == location.name.toLowerCase() || input[1] == (index+1).toString()) {
                         player.currentLocation = location
                         println("You are now in: ${location.name}")
@@ -106,7 +108,7 @@ class Parser (val player: Player, val visitables: List<Place.Visitable>, val loc
         override val altCommand: List<String> = listOf("v")
         override fun run(input: List<String>) {
 
-            val places = visitables.filter { it.location == player.currentLocation }
+            val places = places.filter { it.district == player.currentLocation }
             val placesList = places.map { it.name }
 
             if (input.size < 2) {
@@ -184,13 +186,14 @@ class Parser (val player: Player, val visitables: List<Place.Visitable>, val loc
         override fun run(input: List<String>) {
 
             println("-".repeat(55))
-            System.out.printf("%20s %15s %15s", "Item","Value ea", "Quantity")
+            System.out.printf("%-18s %15s %15s", "Item","Value ea", "Quantity")
             println()
             println("-".repeat(55))
-            player.inventory.forEach {
+
+            player.inventory.forEach { item ->
                 System.out.format(
-                    "%20s %15s %15s",
-                    it.key.name, it.key.value, it.value
+                    "%-18s %15s %15s",
+                    "(${player.returnInventoryIndex(item.key)}) ${item.key.name}", item.key.value, item.value
                 )
                 println()
             }
@@ -233,7 +236,7 @@ class Parser (val player: Player, val visitables: List<Place.Visitable>, val loc
 
             fun whenInput(input: String): Boolean {
                 when (input){
-                    "location" -> {
+                    "district" -> {
                         println(player.currentLocation.locationDescription)
                         return true
                     }
@@ -250,15 +253,15 @@ class Parser (val player: Player, val visitables: List<Place.Visitable>, val loc
                         return true
                     }
                 }
-                println("That not an option. Please choose either place or location.")
+                println("That not an option. Please choose either place or district.")
                 return false
             }
 
             if (input.size < 2) {
                 println("""
                         What would you like information on?
-                        (1) Location
-                        (2) Place
+                        (1) District
+                        (2) Location
                         """.trimIndent())
                 while (true) {
                     val secondInput = readLine()!!.toLowerCase().split(" ")
@@ -342,7 +345,8 @@ class Parser (val player: Player, val visitables: List<Place.Visitable>, val loc
                 }
             }
             player.inventory.forEach {
-                if (input[1] == it.key.name.toLowerCase()) {
+                if (input[1] == it.key.name.toLowerCase() ||
+                    input[1] == player.returnInventoryIndex(it.key).toString()) {
                     if (it.key is Item.Armour) {
                         val armour = it.key as Item.Armour
                         when {

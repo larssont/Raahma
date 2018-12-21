@@ -3,19 +3,19 @@ import java.io.File
 class FileReader {
 
     fun readFiles(
-        locations: List<Location>,
-        visitables: List<Place.Visitable>,
+        districts: List<Location.District>,
+        places: List<Location.Place>,
         characters: List<Npc.SupportingCharacter>
     ) {
-        locationDescriptions(locations)
-        placeDescriptions(visitables)
+        districtDescriptions(districts)
+        placeDescriptions(places)
         sideCharacterScript(characters)
     }
 
-    private fun locationDescriptions(locations: List<Location>) {
-        locations.forEach {
+    private fun districtDescriptions(districts: List<Location.District>) {
+        districts.forEach {
             val name = it.name.replace("\\s".toRegex(), "")
-            val directory = File("assets/Location/$name/")
+            val directory = File("assets/District/$name/")
             directory.mkdirs()
             val file = File(directory, name+"_description.txt")
             file.createNewFile()
@@ -23,10 +23,10 @@ class FileReader {
         }
     }
 
-    private fun placeDescriptions(visitables: List<Place.Visitable>) {
-        visitables.forEach {
+    private fun placeDescriptions(places: List<Location.Place>) {
+        places.forEach {
             val name = it.name.replace("\\s".toRegex(), "")
-            val directory = File("assets/Place/$name/")
+            val directory = File("assets/Location/$name/")
             directory.mkdirs()
             val file = File(directory, name+"_description.txt")
             file.createNewFile()
