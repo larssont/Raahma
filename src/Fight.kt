@@ -7,12 +7,15 @@ class Fight (private val player: Player, private val combat: Combat){
         val fightSkill: SkillSystem.FightSkill? = player.equippedWeapon?.skill
         val attackOptions = attacks(fightSkill)
         var damageFactor = 1.0
+        var defenceExpGained = 0
 
         fightSkill?.let { damageFactor = (it.damageLevelMultiplier*player.equippedWeapon!!.damageFactor)  }
 
-        val mobDamage =
-            if (player.equippedArmour == null) mob.damage
-            else (mob.damage*(1- player.equippedArmour!!.damageReduceFactor)).toInt()
+        var mobDamage = mob.damage
+
+        player.equippedArmour?.let {
+            mobDamage = (mob.damage*(1-it.damageDeflectionFactor)).toInt()
+        }
 
         println("\n".repeat(8))
         println("You have initiated a fight with: ${mob.name}")
@@ -39,7 +42,8 @@ class Fight (private val player: Player, private val combat: Combat){
                     println("You killed ${mob.name}. Fight over.")
                     fightSkill?.let {
                         player.increaseExp(it, mob.exp)
-                        println("You gained ${mob.exp} experience points in ${it.name}")
+                        println("${mob.exp} experience points gained in ${it.name}")
+                        println("$defenceExpGained experience points gained in ${player.defence.name}")
                     }
 
                     val drops = player.pickUpDrop(mob.drop)
@@ -56,11 +60,14 @@ class Fight (private val player: Player, private val combat: Combat){
             if (Random.nextDouble() - attack.blockAbility < 0) println("You blocked the attack!")
             else {
                 player.hpLeft -= mobDamage
+                defenceExpGained += (3*mobDamage)/4
                 if (player.hpLeft <= 0) {
-                    print(player.respawn())
+                    print(player.die())
                     break
                 }
-                else println("You got hit for $mobDamage. You now have ${player.hpLeft} hp left.")
+                else println("""
+                    You got hit for $mobDamage. You now have ${player.hpLeft} hp left.
+                """.trimIndent())
             }
         }
     }

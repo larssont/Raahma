@@ -1,3 +1,5 @@
+import java.io.Serializable
+
 data class Mob (
     val name: String,
     val hp: Int,
@@ -5,7 +7,7 @@ data class Mob (
     val blockAbility: Double,
     val exp: Int,
     val drop: Map<Item.Storable,Triple<Int,Double,Double>>
-) {
+) : Serializable {
     var hpLeft = hp
 
 }

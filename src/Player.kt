@@ -1,6 +1,7 @@
+import java.io.Serializable
 import kotlin.random.Random
 
-class Player (val spawnLocation: Location.District, val spawnPlace: Location.Place) {
+class Player : Serializable {
 
     private val skillSystem = SkillSystem()
 
@@ -20,8 +21,11 @@ class Player (val spawnLocation: Location.District, val spawnPlace: Location.Pla
     var equippedWeapon: Item.Weapon? = null
     var equippedArmour: Item.Armour? = null
 
-    var currentLocation = spawnLocation
-    var currentPlace = spawnPlace
+    lateinit var currentDistrict: Location.District
+    lateinit var currentPlace: Location.Place
+
+    lateinit var spawnDistrict: Location.District
+    lateinit var spawnPlace: Location.Place
 
     val magic = skillSystem.FightSkill(1,"Magic")
     val archery = skillSystem.FightSkill(1,"Archery")
@@ -34,7 +38,7 @@ class Player (val spawnLocation: Location.District, val spawnPlace: Location.Pla
     val skills = arrayListOf(magic,melee,archery,luck,smithing,defence)
     val fightSkills = skills.filter { it is SkillSystem.FightSkill }
 
-    var hp = 100 + (fightSkills.map { it.level }.average()*7).toInt()
+    var hp = updateHp()
     var hpLeft = hp
 
     fun increaseExp(skill: SkillSystem.Skill, exp: Int) {
@@ -44,11 +48,11 @@ class Player (val spawnLocation: Location.District, val spawnPlace: Location.Pla
             skill.level++
             skill.experience = 0
         }
-        updateHp()
+        hp = updateHp()
     }
 
-    fun updateHp() {
-        hp = 100+(fightSkills.map { it.level }.average()*10).toInt()
+    fun updateHp(): Int {
+        return 100 + ((fightSkills.map { it.level } + defence.level).average()*8).toInt()
     }
 
     fun addToInventory(item: Item.Storable, amount: Int) {
@@ -89,7 +93,7 @@ class Player (val spawnLocation: Location.District, val spawnPlace: Location.Pla
     }
 
     fun equipArmour(armour: Item.Armour): Boolean {
-        return if (armour.levelReq > defence.level ){
+        return if (defence.level >= armour.levelReq ){
             equippedArmour = armour
             true
         } else false
@@ -102,14 +106,17 @@ class Player (val spawnLocation: Location.District, val spawnPlace: Location.Pla
         else inventory[food] = inventory[food]!! - 1
     }
 
-    fun respawn(): String {
-        currentLocation = spawnLocation
+    fun respawn() {
         currentPlace = spawnPlace
-        hpLeft = hp
+        currentDistrict = spawnDistrict
+    }
 
+    fun die(): String {
+        hpLeft = hp
+        respawn()
         return """
             Oh no, you died!
-            You have respawned in ${currentLocation.name}.
+            You have respawned in ${currentDistrict.name}.
         """.trimIndent()
 
     }

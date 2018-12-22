@@ -1,4 +1,9 @@
-class Parser (val player: Player, val places: List<Location.Place>, val districts: List<Location.District>, val fight: Fight) {
+class Parser (
+    val player: Player,
+    val places: List<Location.Place>,
+    val districts: List<Location.District>,
+    val fight: Fight
+) {
 
     var quit: Boolean = false
 
@@ -15,6 +20,7 @@ class Parser (val player: Player, val places: List<Location.Place>, val district
 
     fun processCommand() {
         val input = readLine()!!.toLowerCase().split(" ", limit=2)
+        println()
         for (command in commands) {
             val className = command.subClassName()
             when {
@@ -31,8 +37,13 @@ class Parser (val player: Player, val places: List<Location.Place>, val district
         println("The command ${input[0]} does not exist.")
     }
 
-    fun printNumberedList(list: List<String>) {
+    fun printStringOptions(list: List<String>) {
+        list.forEachIndexed { index, s ->
+            println("(${index+1}) $s")
+        }
+    }
 
+    fun printNumberedList(list: List<String>) {
         val repeat = "-".repeat(60)
         println(repeat)
         list.forEachIndexed { index, s ->
@@ -90,7 +101,7 @@ class Parser (val player: Player, val places: List<Location.Place>, val district
             else {
                 districts.forEachIndexed { index, location ->
                     if (input[1] == location.name.toLowerCase() || input[1] == (index+1).toString()) {
-                        player.currentLocation = location
+                        player.currentDistrict = location
                         println("You are now in: ${location.name}")
                         return
                     }
@@ -106,11 +117,11 @@ class Parser (val player: Player, val places: List<Location.Place>, val district
         override val altCommand: List<String> = listOf("v")
         override fun run(input: List<String>) {
 
-            val places = places.filter { it.district == player.currentLocation }
+            val places = places.filter { it.district == player.currentDistrict }
             val placesList = places.map { it.name }
 
             if (input.size < 2) {
-                println("You can visit these places in ${player.currentLocation.name}:")
+                println("You can visit these places in ${player.currentDistrict.name}:")
                 printNumberedList(placesList)
             }
             else {
@@ -121,7 +132,7 @@ class Parser (val player: Player, val places: List<Location.Place>, val district
                         return
                     }
                 }
-                println("${input[1].capitalize()} does not exist in ${player.currentLocation.name}")
+                println("${input[1].capitalize()} does not exist in ${player.currentDistrict.name}")
             }
         }
     }
@@ -175,7 +186,7 @@ class Parser (val player: Player, val places: List<Location.Place>, val district
     inner class Position: Command {
         override val altCommand: List<String> = listOf("pos")
         override fun run(input: List<String>) {
-            println("You are currently in ${player.currentLocation.name}: ${player.currentPlace.name}.")
+            println("You are currently in ${player.currentDistrict.name}: ${player.currentPlace.name}.")
         }
     }
 
@@ -232,56 +243,79 @@ class Parser (val player: Player, val places: List<Location.Place>, val district
         override val altCommand: List<String> = listOf("information")
         override fun run(input: List<String>) {
 
-            fun whenInput(input: String): Boolean {
-                when (input){
-                    "district" -> {
-                        println(player.currentLocation.locationDescription)
-                        return true
-                    }
-                    "1" -> {
-                        println(player.currentLocation.locationDescription)
-                        return true
-                    }
-                    "place" -> {
-                        println(player.currentPlace.placeDescription)
-                        return true
-                    }
-                    "2" -> {
-                        println(player.currentPlace.placeDescription)
-                        return true
-                    }
-                }
-                println("That not an option. Please choose either place or district.")
-                return false
-            }
+            val infoList = listOf("District","Place")
+            val info: Any
 
             if (input.size < 2) {
-                println("""
-                        What would you like information on?
-                        (1) District
-                        (2) Location
-                        """.trimIndent())
-                while (true) {
-                    val secondInput = readLine()!!.toLowerCase().split(" ")
-                    if (whenInput(secondInput[0])) return
-                }
+                println("Information on what?")
+                printStringOptions(infoList)
+
             }
 
             else {
-                if (whenInput(input[1])) return
+                info = when (input[1]) {
+                    infoList[0].toLowerCase(), "1" -> {
+                        player.currentDistrict
+                    }
+                    infoList[1].toLowerCase(), "2" -> {
+                        player.currentPlace
+                    }
+                    else -> {
+                        println("That not an option. Type \"info x\".")
+                        printStringOptions(infoList)
+                        return
+                    }
+                }
+
+
+                if (info is Location.District) {
+                    if (info.districtDescription == "")  {
+                        println("There's currently no information available for ${info.name}.")
+                    }
+                    else println(info.districtDescription)
+                }
+
+                else if (info is Location.Place) {
+                    if (info.placeDescription == "") {
+                        println("There's currently no information available for ${info.name}.")
+                    }
+                    else println(info.placeDescription)
+                }
+
             }
-
-
         }
     }
 
     inner class Quit: Command {
         override val altCommand: List<String> = listOf()
         override fun run(input: List<String>) {
-            println("""
-                Thanks for playing!
-            """.trimIndent())
-            quit = true
+
+            val query = """
+                "Are you sure you want to quit? Your progress will be saved."
+                (1) Yes
+                (2) No
+            """.trimIndent()
+
+            println(query)
+
+            loop@ while (true) {
+                val secondInput = readLine()!!.toLowerCase()
+                when (secondInput) {
+                    "1","yes","y" -> {
+                        quit = true
+                        println("Thanks for playing!")
+                    }
+                    "2","no","n" -> {
+                        quit = false
+                        println("")
+                    }
+                    else -> {
+                        println(query)
+                        continue@loop
+                    }
+                }
+                return
+            }
         }
     }
 
@@ -328,15 +362,15 @@ class Parser (val player: Player, val places: List<Location.Place>, val district
                 else {
                     val repeat = "-".repeat(60)
                     println(repeat)
-                    System.out.printf("%15s %20s %18s","Equipped","Name", "Level req")
+                    System.out.printf("%-15s %-15s %18s","Equipped","Name", "Level req")
                     println()
                     println(repeat)
                     player.equippedWeapon?.let {
-                        System.out.format("%15s %20s %18s", "Weapon", it.name, it.levelReq)
+                        System.out.format("%-15s %-15s %18s", "Weapon", it.name, it.levelReq)
                         println()
                     }
                     player.equippedArmour?.let {
-                        System.out.format("%15s %20s %18s", "Armour", it.name, it.levelReq)
+                        System.out.format("%-15s %-15s %18s", "Armour", it.name, it.levelReq)
                         println()
                     }
                     println(repeat)

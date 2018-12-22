@@ -1,10 +1,12 @@
+import java.io.Serializable
+
 class Location {
 
-    data class District(val name: String) {
-        var locationDescription = ""
+    data class District(val name: String) : Serializable {
+        var districtDescription = ""
     }
     
-    interface Place {
+    interface Place : Serializable {
         val name: String
         val npcs: MutableList<Npc.Person>
         var placeDescription: String

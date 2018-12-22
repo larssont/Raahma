@@ -1,4 +1,6 @@
-class SkillSystem{
+import java.io.Serializable
+
+class SkillSystem : Serializable {
 
     private fun logFactor(level: Int): Double {
         return 1 + Math.log(level.toDouble()) / Math.log(3.toDouble())
@@ -8,7 +10,7 @@ class SkillSystem{
         return Math.pow((1.02), level - 1.toDouble())
     }
 
-    interface Skill {
+    interface Skill : Serializable {
         var experience: Int
         val name: String
         val maxLevel: Int

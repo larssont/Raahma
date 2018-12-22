@@ -1,10 +1,12 @@
-class Item (player: Player) {
+import java.io.Serializable
 
-    private val osmium = WeaponTier("Osmium",50,5.0,5000)
-    private val rhodium = WeaponTier("Rhodium",30,3.5,2500)
-    private val manganese = WeaponTier("Manganese",20,2.5,1000)
-    private val steel = WeaponTier("Steel",10,2.0,500)
-    private val iron = WeaponTier("Iron",1,1.5,200)
+class Item (player: Player) : Serializable {
+
+    private val osmium = MaterialTier("Osmium",50,5.0,5000)
+    private val rhodium = MaterialTier("Rhodium",30,3.5,2500)
+    private val manganese = MaterialTier("Manganese",20,2.5,1000)
+    private val steel = MaterialTier("Steel",10,2.0,500)
+    private val iron = MaterialTier("Iron",1,1.5,200)
     private val meleeWeaponTiers = listOf(osmium,rhodium,manganese,steel,iron)
 
     private val sword = WeaponType("Sword",1.0,0.10)
@@ -12,11 +14,11 @@ class Item (player: Player) {
     private val spear = WeaponType("Spear",1.2,0.03)
     private val meleeWeaponTypes = listOf(sword,warAxe,spear)
 
-    private val dioptase = WeaponTier("Dioptase",50,5.0,5000)
-    private val kyanite = WeaponTier("Kyanite",30,3.5,2500)
-    private val erythrite = WeaponTier("Erythrite",20,2.5,1000)
-    private val moldavite = WeaponTier("Moldavite",10,2.0,500)
-    private val amethyst = WeaponTier("Amethyst",1,1.5,200)
+    private val dioptase = MaterialTier("Dioptase",50,5.0,5000)
+    private val kyanite = MaterialTier("Kyanite",30,3.5,2500)
+    private val erythrite = MaterialTier("Erythrite",20,2.5,1000)
+    private val moldavite = MaterialTier("Moldavite",10,2.0,500)
+    private val amethyst = MaterialTier("Amethyst",1,1.5,200)
     private val magicWeaponTiers = listOf(dioptase,kyanite,erythrite,moldavite,amethyst)
 
     private val wand = WeaponType("Wand",1.0,0.10)
@@ -24,11 +26,11 @@ class Item (player: Player) {
     private val orb = WeaponType("Orb",1.2,0.03)
     private val magicWeaponTypes = listOf(wand,staff,orb)
 
-    private val rosewood = WeaponTier("Rosewood",50,5.0,5000)
-    private val sycamore = WeaponTier("Sycamore",30,3.5,2500)
-    private val cedar = WeaponTier("Cedar",20,2.5,1000)
-    private val bone = WeaponTier("Bone",10,2.0,500)
-    private val oak = WeaponTier("Oak",1,1.5,200)
+    private val rosewood = MaterialTier("Rosewood",50,5.0,5000)
+    private val sycamore = MaterialTier("Sycamore",30,3.5,2500)
+    private val cedar = MaterialTier("Cedar",20,2.5,1000)
+    private val bone = MaterialTier("Bone",10,2.0,500)
+    private val oak = MaterialTier("Oak",1,1.5,200)
     private val archeryWeaponTiers = listOf(oak,bone,cedar,sycamore,rosewood)
 
     private val longBow = WeaponType("Longbow",1.0,0.10)
@@ -39,6 +41,7 @@ class Item (player: Player) {
     val meleeWeapons = createWeapons(meleeWeaponTiers,meleeWeaponTypes,player.melee)
     val archeryWeapons = createWeapons(archeryWeaponTiers,archeryWeaponTypes,player.archery)
     val magicWeapons = createWeapons(magicWeaponTiers,magicWeaponTypes,player.magic)
+    val armour = createArmour(meleeWeaponTiers)
 
     val shrimp = Food("Shrimp",20,20)
     val corn = Food("Corn",10, 8)
@@ -58,45 +61,53 @@ class Item (player: Player) {
 
     val copperCoin = Currency("Copper coin",1)
 
-    private fun createWeapons(tiers: List<WeaponTier>, types: List<WeaponType>, skill: SkillSystem.FightSkill):
+    private fun createWeapons(tiers: List<MaterialTier>, types: List<WeaponType>, skill: SkillSystem.FightSkill):
             ArrayList<Weapon> {
         val weapons = arrayListOf<Weapon>()
-        tiers.forEach { a ->
-            types.forEach { b ->
-                val name = "${a.name} ${b.name.toLowerCase()}"
-                val value = a.cost
-                val levelReq = a.levelReq
-                val damageFactor = a.damageFactor*b.damageFactor
-                val critProbablity = b.critProbablity
+        tiers.forEach { tier ->
+            types.forEach { type ->
+                val name = "${tier.name} ${type.name.toLowerCase()}"
+                val value = tier.cost
+                val levelReq = tier.levelReq
+                val damageFactor = tier.damageFactor*type.damageFactor
+                val critProbablity = type.critProbablity
                 weapons.add(Weapon(name,value,levelReq,skill,damageFactor,critProbablity))
             }
         }
         return weapons
     }
 
-    interface Storable {
+    private fun createArmour(tiers: List<MaterialTier>): ArrayList<Armour> {
+        val armour = arrayListOf<Armour>()
+        tiers.forEach {
+            armour.add(Armour("${it.name} armour",it.cost,it.levelReq,it.damageFactor/13))
+        }
+        return armour
+    }
+
+    interface Storable : Serializable {
         val name: String
         val value: Int
     }
 
-    data class WeaponTier (
+    data class MaterialTier (
         val name: String,
         val levelReq: Int,
         val damageFactor: Double,
         val cost: Int
-    )
+    ) : Serializable
 
     data class WeaponType (
         val name: String,
         val damageFactor: Double,
         val critProbablity: Double
-    )
+    ) : Serializable
 
     data class Armour (
         override val name: String,
         override val value: Int,
         val levelReq: Int,
-        val damageReduceFactor: Double
+        val damageDeflectionFactor: Double
     ) : Storable
 
     data class Weapon (

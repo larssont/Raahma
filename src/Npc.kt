@@ -1,6 +1,8 @@
+import java.io.Serializable
+
 class Npc {
 
-    interface Person {
+    interface Person : Serializable {
         val name: String
         fun run(player: Player)
     }
