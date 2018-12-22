@@ -291,7 +291,7 @@ class Parser (
         override fun run(input: List<String>) {
 
             val query = """
-                "Are you sure you want to quit? Your progress will be saved."
+                "Are you sure you want to quit?"
                 (1) Yes
                 (2) No
             """.trimIndent()

@@ -11,8 +11,10 @@ class Game {
 
     internal fun play() {
         askNewGame()
-        do gc.parser.processCommand() while (!gc.parser.quit)
-        fileReader.save(player)
+        do {
+            gc.parser.processCommand()
+            fileReader.save(player)
+        } while (!gc.parser.quit)
     }
 
 
@@ -26,9 +28,9 @@ class Game {
 
         fun printSaveMessage() {
             println("""
-                Do you want to continue on your save or start a new game?
+                Do you want to resume from your latest save or start a new game?
                 Last saved: $formattedDate
-                (1) Continue
+                (1) Resume
                 (2) New game
             """.trimIndent())
         }
@@ -40,7 +42,7 @@ class Game {
             fileReader.readFiles(gc.districts,gc.places,gc.supportingCharacters)
         }
 
-        fun continueGame(playerSave: Player) {
+        fun resumeGame(playerSave: Player) {
             player = playerSave
             println("""
 
@@ -68,7 +70,7 @@ class Game {
 
             loop@ while (true) {
                 when (input) {
-                    "continue","1" -> continueGame(playerSave)
+                    "resume","1" -> resumeGame(playerSave)
                     "new game","2" -> newGame()
                     else -> {
                         printSaveMessage()
