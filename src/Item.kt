@@ -42,21 +42,21 @@ class Item (player: Player) {
 
     val shrimp = Food("Shrimp",20,20)
     val corn = Food("Corn",10, 8)
-    val beef = Food("Beef",50,30)
+
     val chicken = Food("Chicken",100,80)
     val grayGoo = Food("Gray goo",300,1)
     val honey = Food("Honey",150,40)
-    val banana = Food("Banana",50,25)
+    val banana = Food("Banana",30,15)
     val bread = Food("Bread",15,5)
     val potato = Food("Potato",70,40)
     val rockFish = Food("Rock fish",150,100)
-    val lambMeat = Food("Lamb meat", 50, 35)
+    val beef = Food("Beef",50,30)
+    val lambMeat = Food("Lamb meat", 75, 50)
+    val goatMeat = Food("Goat meat", 100, 75)
 
     val shopFoods = arrayListOf(shrimp,corn,chicken,grayGoo,honey,banana,bread,potato,rockFish)
 
     val copperCoin = Currency("Copper coin",1)
-
-
 
     private fun createWeapons(tiers: List<WeaponTier>, types: List<WeaponType>, skill: SkillSystem.FightSkill):
             ArrayList<Weapon> {

@@ -34,7 +34,7 @@ class SkillSystem{
         override var experienceGap: Int = (500*exponentialFactor(level)).toInt(),
         override var totalExperience: Int = 0
     ) : Skill {
-        var damageLevelMultiplier: Double = level*logFactor(level)
+        var damageLevelMultiplier: Double = logFactor(level)
     }
 
 

@@ -23,7 +23,7 @@ class Player (val spawnLocation: Location.District, val spawnPlace: Location.Pla
     var currentLocation = spawnLocation
     var currentPlace = spawnPlace
 
-    val magic = skillSystem.FightSkill(8,"Magic")
+    val magic = skillSystem.FightSkill(1,"Magic")
     val archery = skillSystem.FightSkill(1,"Archery")
     val melee = skillSystem.FightSkill(1,"Melee")
 

@@ -9,8 +9,6 @@ class Parser (val player: Player, val places: List<Location.Place>, val district
 
     val districtsList = districts.map { it.name }
 
-    val inventoryList = mutableListOf(player.inventory.keys)
-
     private fun Any.subClassName(): String {
         return this::class.java.name.toLowerCase().removePrefix("parser$")
     }
@@ -296,7 +294,8 @@ class Parser (val player: Player, val places: List<Location.Place>, val district
             }
 
             player.inventory.forEach {
-                if (it.key.name.toLowerCase() == input[1]) {
+                if (input[1] == it.key.name.toLowerCase() ||
+                    input[1] == player.returnInventoryIndex(it.key).toString()) {
                     if (it.key !is Item.Food) println("You can't eat that!")
                     else {
                         player.eat(it.key as Item.Food)

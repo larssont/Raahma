@@ -42,6 +42,7 @@ class Game {
     private val hugeMoneyDrop = item.copperCoin to Triple(1000,0.25,0.9)
     private val beefDrop = item.beef to Triple(1,0.0,1.0)
     private val lambMeatDrop = item.lambMeat to Triple(1,0.0,1.0)
+    private val goatMeatDrop = item.goatMeat to Triple(1,0.0,1.0)
 
     private val meleeShopNpc = Npc.Shopkeeper("Thomas", item.meleeWeapons, "Thomas the Feud Counselor",item)
     private val archeryShopNpc = Npc.Shopkeeper("Arthur",item.archeryWeapons, "Arthur's Archery",item)
@@ -51,7 +52,7 @@ class Game {
 
     private val supportingCharacters = listOf(homelessNpc)
 
-    private val rat = Mob("Rat", 50, 5, 0.03, 100, mapOf(lowMoneyDrop))
+    private val rat = Mob("Rat", 50, 5, 0.03, 50, mapOf(lowMoneyDrop))
     private val guard = Mob("Guard", 200,15,0.12,200, mapOf(mediumMoneyDrop))
     private val supremeGuard = Mob("Supreme guard",350,25,0.15,300, mapOf(highMoneyDrop))
     private val zombie = Mob("Zombie",250,20,0.12,175, mapOf(mediumMoneyDrop))
@@ -63,7 +64,7 @@ class Game {
     private val cyclope = Mob("Cyclope", 450, 30, 0.1, 400, mapOf(mediumMoneyDrop))
     private val cow = Mob("Cow",100,5,0.0,100, mapOf(beefDrop, lowMoneyDrop))
     private val sheep = Mob("Sheep",100,5,0.0,100, mapOf(lambMeatDrop, lowMoneyDrop))
-    private val goat = Mob("Goat", 100,5,0.0,100, mapOf(lowMoneyDrop))
+    private val goat = Mob("Goat", 100,5,0.0,100, mapOf(goatMeatDrop, lowMoneyDrop))
     private val demon = Mob("Demon", 400, 35, 0.2, 400, mapOf(mediumMoneyDrop))
     private val elf = Mob("Elf", 150, 20, 0.15, 200, mapOf(lowMoneyDrop))
     private val fairy = Mob("Fairy",100, 15,0.05, 100, mapOf(lowMoneyDrop))
@@ -75,12 +76,12 @@ class Game {
     private val wraith = Mob("Wraith", 400, 40, 0.1, 300, mapOf(highMoneyDrop))
 
     internal fun play() {
-        welcome()
         spawnNPCs()
         spawnMobs()
         println()
         player.addToInventory(item.copperCoin,10000)
         fileReader.readFiles(districts,places,supportingCharacters)
+        welcome()
         while (!parser.quit) {
             parser.processCommand()
         }
@@ -104,7 +105,7 @@ class Game {
 
         println("""
 
-            Welcome to Warisoga! Warisoga is an interactive fan-fiction role-playing game, developed to be challenging
+            Welcome to Raahma! Raahma is an interactive fan-fiction role-playing game, developed to be challenging
             yet intriguing with lots of interesting things to be discovered. This game is all about creating your own
             story, with your own ending.
 

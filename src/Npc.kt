@@ -73,7 +73,12 @@ class Npc {
                 }
                 input[0] == "buy" -> {
                     sortedStock.forEachIndexed { index, storable ->
-                        if (input[1] == storable.name.toLowerCase() || input[1] == (index+1).toString()) {
+                        if (input.size < 2) {
+                            println("Buy what?")
+                            buySequence(player)
+                            return
+                        }
+                        else if (input[1] == storable.name.toLowerCase() || input[1] == (index+1).toString()) {
 
                             val money = player.inventory[item.copperCoin]
 
