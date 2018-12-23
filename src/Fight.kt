@@ -7,7 +7,7 @@ class Fight (private val player: Player, private val combat: Combat){
         val fightSkill: SkillSystem.FightSkill? = player.equippedWeapon?.skill
         val attackOptions = attacks(fightSkill)
         var damageFactor = 1.0
-        var defenceExpGained = 0
+        var defenceExpGained = 0.0
 
         fightSkill?.let { damageFactor = (it.damageLevelMultiplier*player.equippedWeapon!!.damageFactor)  }
 
@@ -39,15 +39,19 @@ class Fight (private val player: Player, private val combat: Combat){
                 mob.hpLeft -= playerDamage
                 if (mob.hpLeft <= 0) {
 
+                    val drops = player.pickUpDrop(mob.drop)
+
                     println("You killed ${mob.name}. Fight over.")
+                    drops?.let { it.forEach { it -> println("You picked up ${it.value}: ${it.key.name}") } }
+
                     fightSkill?.let {
                         player.increaseExp(it, mob.exp)
                         println("${mob.exp} experience points gained in ${it.name}")
-                        println("$defenceExpGained experience points gained in ${player.defence.name}")
                     }
 
-                    val drops = player.pickUpDrop(mob.drop)
-                    drops?.let { it.forEach { it -> println("You picked up ${it.value}: ${it.key.name}") } }
+                    player.increaseExp(player.defence, defenceExpGained.toInt())
+                    println("${defenceExpGained.toInt()} experience points gained in ${player.defence.name}")
+
 
                     respawnMob(mob)
                     break

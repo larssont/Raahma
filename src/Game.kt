@@ -46,7 +46,7 @@ class Game {
             player = playerSave
             println("""
 
-                Welcome back, have fun!
+                Welcome back ${player.name}, have fun!
             """.trimIndent())
             loadGame()
         }
@@ -118,10 +118,10 @@ class Game {
 
         println("""
             The game consists of two different types of geographical elements, districts and places.
-            Locations consists mostly of different cities which you can visit, and each district contains
+            Districts consists mostly of different cities which you can visit, and each district contains
             multiple places.
 
-            In order to travel to destination x, type "travel x". If you just want to find you where you can
+            In order to travel to district x, type "travel x". If you just want to find you where you can
             travel, type "travel".
         """.trimIndent())
 

@@ -1,4 +1,5 @@
 import java.io.Serializable
+import java.lang.IllegalArgumentException
 import kotlin.random.Random
 
 class Player : Serializable {
@@ -60,20 +61,25 @@ class Player : Serializable {
         else inventory[item] = amount
     }
 
-    fun pickUpDrop(drop: Map<Item.Storable,Triple<Int,Double,Double>>): MutableMap<Item.Storable, Int>? {
+    fun pickUpDrop(drops: Map<Item.Storable,Triple<Int,Double,Double>>): MutableMap<Item.Storable, Int>? {
 
         val pickedUpDrops: MutableMap<Item.Storable, Int> = mutableMapOf()
 
         fun dropAmount(dropBaseAmount: Int, factor: Double): Int {
-            val random = Random.nextDouble(from = 1-factor, until = 1+factor)
+
+            val random: Double = try {
+                Random.nextDouble(from = 1-factor, until = 1+factor)
+            } catch (i: IllegalArgumentException) {
+                1.0
+            }
             return (dropBaseAmount*random).toInt()
         }
 
-        for (it in drop) {
-            if (Random.nextDouble() > it.value.third) continue
-            val dropAmount = dropAmount(it.value.first,it.value.second)
-            addToInventory(it.key,dropAmount)
-            pickedUpDrops[it.key] = dropAmount
+        for (drop in drops) {
+            if (Random.nextDouble() > drop.value.third) continue
+            val dropAmount = dropAmount(drop.value.first,drop.value.second)
+            addToInventory(drop.key,dropAmount)
+            pickedUpDrops[drop.key] = dropAmount
         }
         return pickedUpDrops
     }
