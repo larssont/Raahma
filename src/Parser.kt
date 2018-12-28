@@ -444,6 +444,7 @@ class Parser (
                         return
                     }
                     println("You do not have any armour equipped.")
+                    return
                 } else if (input[1] == "weapon") {
                     player.equippedWeapon?.let {
                         player.addToInventory(it, 1)
@@ -452,8 +453,8 @@ class Parser (
                         return
                     }
                     println("You do not have any weapon equipped.")
+                    return
                 }
-                return
             }
             println("Type \"unequip armour\" or \"unequip weapon\".")
 
