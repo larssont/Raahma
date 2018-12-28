@@ -1,13 +1,24 @@
 # Raahma
 ## Descrpition
 
-Raahma is an interactive-fiction singleplayer RPG set in the medieval times. You have the ability to slay mobs, level up, and purchase items in order to become a better warrior and grind your way to higher levels. There's no goal in raahma, you can create your own story.
+Raahma is an interactive-fiction singleplayer RPG set in the medieval times. You have the ability to slay mobs, level up, and purchase items in order to become a better warrior and grind your way to higher levels. There's no goal in raahma, you create your own story.
 
 ## How to play
 
-Download the latest .jar from the *releases* page.
+Download the latest release from the *releases* page.
+Unpack the file contents.
 
-Open your command-line interface of choice and type: *java -jar C:/path/to/game.jar*
+### Windows
+Double-click Raahma.bat file in order to run the game.
+If the game does not run or an error message comes up, continue to the *Manual* section.
+
+### Mac
+Double-click the Raahma.command file in order to run the game.
+If the game does not run or an error message comes up, continue to the *Manual* section.
+
+### Manual
+Open your command-line interface of choice and change the current directory to where the Raahma.jar is located.
+Then type *java -jar Raahma.jar* to run the game.
 
 Make sure you use the correct syntax for your system.
 
