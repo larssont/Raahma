@@ -47,9 +47,11 @@ class Player : Serializable {
         skill.totalExperience += exp
         if (skill.experience >= skill.experienceGap) {
             skill.level++
-            skill.experience = 0
+            skill.experience -= skill.experienceGap
+            hp = updateHp()
+            skill.experienceGap = skill.calcExperienceGap()
         }
-        hp = updateHp()
+
     }
 
     fun updateHp(): Int {

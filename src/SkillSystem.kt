@@ -6,10 +6,6 @@ class SkillSystem : Serializable {
         return 1 + Math.log(level.toDouble()) / Math.log(3.toDouble())
     }
 
-    fun exponentialFactor(level: Int): Double {
-        return Math.pow((1.02), level - 1.toDouble())
-    }
-
     interface Skill : Serializable {
         var experience: Int
         val name: String
@@ -17,6 +13,8 @@ class SkillSystem : Serializable {
         var level: Int
         var experienceGap: Int
         var totalExperience: Int
+
+        fun calcExperienceGap(): Int
     }
 
     inner class NormalSkill (
@@ -24,19 +22,29 @@ class SkillSystem : Serializable {
         override val name: String,
         override val maxLevel: Int = 100,
         override var experience: Int = 0,
-        override var experienceGap: Int = (500*exponentialFactor(level)).toInt(),
         override var totalExperience: Int = 0
-    ) : Skill
+    ) : Skill {
+        override fun calcExperienceGap(): Int {
+           return (500*Math.pow((1.02), this.level - 1.toDouble())).toInt()
+        }
+
+        override var experienceGap = calcExperienceGap()
+    }
 
     inner class FightSkill (
         override var level: Int,
         override val name: String,
         override val maxLevel: Int = 100,
         override var experience: Int = 0,
-        override var experienceGap: Int = (500*exponentialFactor(level)).toInt(),
         override var totalExperience: Int = 0
     ) : Skill {
         var damageLevelMultiplier: Double = logFactor(level)
+
+        override fun calcExperienceGap(): Int {
+            return (500*Math.pow((1.02), this.level - 1.toDouble())).toInt()
+        }
+
+        override var experienceGap = calcExperienceGap()
     }
 
 
