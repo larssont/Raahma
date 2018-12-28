@@ -8,7 +8,7 @@ class Parser (
     var quit: Boolean = false
 
     val commands = arrayListOf(Travel(),Stats(),Position(),Inventory(),
-        Attack(),Info(),Quit(),Eat(),Health(),Equip(),Visit(),Talk(),Help(),Map())
+        Attack(),Info(),Quit(),Eat(),Health(),Equip(),Visit(),Talk(),Help(),Map(),Unequip())
 
     val commandsWords = commands.map { it.subClassName().capitalize() to it.altCommand }.toMap()
 
@@ -429,6 +429,34 @@ class Parser (
                 }
             }
             println("You don't seem to have ${input[1]}.")
+        }
+    }
+
+    inner class Unequip: Command {
+        override val altCommand: List<String> = listOf()
+        override fun run(input: List<String>) {
+            if (input.size >= 2) {
+                if (input[1] == "armour") {
+                    player.equippedArmour?.let {
+                        player.addToInventory(it, 1)
+                        player.equippedArmour = null
+                        println("You have unequipped ${it.name}.")
+                        return
+                    }
+                    println("You do not have any armour equipped.")
+                } else if (input[1] == "weapon") {
+                    player.equippedWeapon?.let {
+                        player.addToInventory(it, 1)
+                        player.equippedWeapon = null
+                        println("You have unequipped ${it.name}.")
+                        return
+                    }
+                    println("You do not have any weapon equipped.")
+                }
+                return
+            }
+            println("Type \"unequip armour\" or \"unequip weapon\".")
+
         }
     }
 
