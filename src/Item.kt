@@ -54,7 +54,7 @@ class Item (player: Player) : Serializable {
     val potato = Food("Potato",70,40)
     val rockFish = Food("Rock fish",150,100)
     val beef = Food("Beef",50,30)
-    val lambMeat = Food("Lamb meat", 75, 50)
+    val lambChop = Food("Lamb chop", 75, 50)
     val goatMeat = Food("Goat meat", 100, 75)
 
     val shopFoods = arrayListOf(shrimp,corn,chicken,grayGoo,honey,banana,bread,potato,rockFish)

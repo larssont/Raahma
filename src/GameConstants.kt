@@ -66,7 +66,7 @@ class GameConstants (player: Player) {
     private val highMoneyDrop = item.copperCoin to Triple(300, 0.25, 0.9)
     private val hugeMoneyDrop = item.copperCoin to Triple(1000, 0.25, 0.9)
     private val beefDrop = item.beef to Triple(1, 0.0, 1.0)
-    private val lambMeatDrop = item.lambMeat to Triple(1, 0.0, 1.0)
+    private val lambMeatDrop = item.lambChop to Triple(1, 0.0, 1.0)
     private val goatMeatDrop = item.goatMeat to Triple(1, 0.0, 1.0)
 
     private val meleeShopNpc = Npc.Shopkeeper("Thomas", item.meleeWeapons, "Thomas the Feud Counselor", item)
