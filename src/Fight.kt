@@ -67,6 +67,7 @@ class Fight (private val player: Player, private val combat: Combat){
                 defenceExpGained += (3*mobDamage)/4
                 if (player.hpLeft <= 0) {
                     print(player.die())
+                    respawnMob(mob)
                     break
                 }
                 else println("""
