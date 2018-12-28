@@ -49,7 +49,7 @@ class Fight (private val player: Player, private val combat: Combat){
                         println("${mob.exp} experience points gained in ${it.name}")
                     }
 
-                    player.increaseExp(player.defence, defenceExpGained.toInt())
+                    player.increaseExp(player.defence, (defenceExpGained+(mob.exp/4)).toInt())
                     println("${defenceExpGained.toInt()} experience points gained in ${player.defence.name}")
 
 
