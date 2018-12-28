@@ -291,7 +291,7 @@ class Parser (
         override fun run(input: List<String>) {
 
             val query = """
-                "Are you sure you want to quit?" The game will be saved nevertheless.
+                Are you sure you want to quit? The game will be saved regardless.
                 (1) Yes
                 (2) No
             """.trimIndent()
