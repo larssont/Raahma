@@ -9,11 +9,11 @@ Download the latest release from the *releases* page.
 Unpack the file contents.
 
 ### Windows
-Double-click Raahma.bat file in order to run the game.
+Double-click the *Raahma.bat* file in order to run the game.
 If the game does not run or an error message comes up, continue to the *Manual* section.
 
 ### Mac
-Double-click the Raahma.command file in order to run the game.
+Double-click the *Raahma.command* file in order to run the game.
 If the game does not run or an error message comes up, continue to the *Manual* section.
 
 ### Manual
