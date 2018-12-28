@@ -1,7 +1,7 @@
 # Raahma
 ## Descrpition
 
-Raahma is an interactive-fiction singleplayer RPG set in the medieval times. You have the ability to slay mobs, level up, and purchase items in order to become a better warrior and grind your way to higher levels. There's no goal in raahma, you create your own story.
+Raahma is an interactive-fiction singleplayer RPG made using kotlin. You have the ability to slay mobs, level up, and purchase items in order to become a better warrior and grind your way to higher levels. There's no goal in raahma, you create your own story.
 
 ## How to play
 
